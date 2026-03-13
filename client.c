@@ -39,11 +39,11 @@ void sleep_ms(int ms){
 void bs_reconnect(){
     printf("reconnecting...\n");
 
-    if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Ошибка создания сокета");
-        exit(1);
-    }
     while(!connected){
+        if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            perror("Ошибка создания сокета");
+            exit(1);
+        }
         if (connect(bs_fd, (struct sockaddr *)&bs_server_addr, sizeof(bs_server_addr)) < 0) {
             perror("Ошибка подключения");
             close(bs_fd);
