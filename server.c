@@ -65,6 +65,7 @@ void* serial_to_bs_loop(void* args){
         }
         int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
         if (len > 0) {
+            printf("received %i bytes\n",len);
             sent_bytes += len;
             write(bs_fd, buf, len);
         }else{
@@ -90,6 +91,7 @@ void* bs_to_serial_loop(void* args){
         uint8_t buf[65535];
         int len = read(bs_fd, buf, sizeof(buf));
         if(len>0){
+            printf("received %i bytes\n",len);
             write(serial_fd, buf, len);
         }else{
             perror("aboba");
