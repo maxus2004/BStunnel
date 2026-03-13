@@ -1,6 +1,6 @@
 #define BS_SERVER_PORT 443
 
-#define BS_CONN_LENGTH 10000
+#define BS_CONN_LENGTH 10
 
 
 #include <signal.h>
@@ -40,7 +40,7 @@ void bs_reconnect(){
 
     if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Ошибка создания сокета");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
     while(!connected){
         if ((bs_fd = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
@@ -119,14 +119,14 @@ int main() {
     // Создаем сокет
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("Ошибка создания сокета");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // Разрешаем повторное использование порта
     int opt = 1;
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
         perror("Ошибка setsockopt");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // Заполняем структуру адреса
@@ -137,18 +137,18 @@ int main() {
     // Привязываем сокет к адресу и порту
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("Ошибка привязки");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // Начинаем слушать входящие подключения
     if (listen(server_fd, 3) < 0) {
         perror("Ошибка listen");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     if ((bs_fd = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
         perror("Ошибка accept");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     connected = true;

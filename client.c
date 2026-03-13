@@ -1,7 +1,7 @@
 #define BS_SERVER_IP "185.231.247.18"
 #define BS_SERVER_PORT 443
 
-#define BS_CONN_LENGTH 10000
+#define BS_CONN_LENGTH 10
 
 
 #include <signal.h>
