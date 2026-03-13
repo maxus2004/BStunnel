@@ -1,6 +1,6 @@
 #define BS_SERVER_PORT 443
 
-#define BS_CONN_LENGTH 1000000
+#define BS_CONN_LENGTH 100
 
 
 #include <signal.h>
