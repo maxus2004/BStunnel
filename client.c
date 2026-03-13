@@ -21,7 +21,7 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int serial_fd;
-int bs_fd;
+volatile int bs_fd;
 struct sockaddr_in bs_server_addr;
 
 int sent_bytes = 0;
@@ -70,14 +70,14 @@ void* serial_to_bs_loop(void* args){
             pthread_mutex_lock( &bs_mutex );
             printf("sending %i bytes to socket %i\n",len,bs_fd);
             write(bs_fd, buf, len);
-            printf("sending %i bytes\n",len);
+            printf("sent %i bytes\n",len);
             pthread_mutex_unlock( &bs_mutex );
         }else{
             perror("ошибка одна и ошибся ты");
         }
         if(sent_bytes == BS_CONN_LENGTH){
             printf("reached sent bytes limit\n");
-            connected = false;
+            // connected = false;
             shutdown(bs_fd, SHUT_WR);
         }
     }

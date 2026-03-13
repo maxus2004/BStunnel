@@ -20,7 +20,7 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int serial_fd;
-int bs_fd;
+volatile int bs_fd;
 int server_fd;
 struct sockaddr_in address;
 int addrlen = sizeof(address);
@@ -71,7 +71,7 @@ void* serial_to_bs_loop(void* args){
             pthread_mutex_lock( &bs_mutex );
             printf("sending %i bytes to socket %i\n",len,bs_fd);
             write(bs_fd, buf, len);
-            printf("sending %i bytes\n",len);
+            printf("sent %i bytes\n",len);
             pthread_mutex_unlock( &bs_mutex );
         }else{
             perror("ошибка одна и ошибся ты");
