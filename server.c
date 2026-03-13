@@ -1,6 +1,6 @@
 #define BS_SERVER_PORT 443
 
-#define BS_CONN_LENGTH 10
+#define BS_CONN_LENGTH 1000000
 
 
 #include <signal.h>
@@ -16,6 +16,8 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 #include <pthread.h>
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int serial_fd;
 int bs_fd;
@@ -61,7 +63,7 @@ void* serial_to_bs_loop(void* args){
         while(!connected){
             sleep_ms(1);
         }
-        int len = read(serial_fd, buf, BS_CONN_LENGTH-sent_bytes);
+        int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
         sent_bytes += len;
         if (len > 0) {
             write(bs_fd, buf, len);
