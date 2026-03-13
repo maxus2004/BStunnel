@@ -79,7 +79,7 @@ void* serial_to_bs_loop(void* args){
         if(sent_bytes == BS_CONN_LENGTH){
             printf("reached sent bytes limit\n");
             connected = false;
-            shutdown(bs_fd, SHUT_RDWR);
+            shutdown(bs_fd, SHUT_WR);
         }
     }
 
@@ -103,6 +103,7 @@ void* bs_to_serial_loop(void* args){
             printf("received EOF\n");
             connected = false;
             pthread_mutex_lock( &bs_mutex );
+            shutdown(bs_fd, SHUT_WR);
             close(bs_fd);
             pthread_mutex_unlock( &bs_mutex );
             bs_reconnect();
