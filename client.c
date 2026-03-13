@@ -39,7 +39,7 @@ void bs_reconnect(){
 
     if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Ошибка создания сокета");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
     while(!connected){
         if (connect(bs_fd, (struct sockaddr *)&bs_server_addr, sizeof(bs_server_addr)) < 0) {
@@ -64,7 +64,7 @@ void* serial_to_bs_loop(void* args){
         }
         int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
         if (len > 0) {
-            printf("received %i bytes\n",len);
+            printf("sent %i bytes\n",len);
             sent_bytes += len;
             write(bs_fd, buf, len);
         }else{
@@ -122,17 +122,17 @@ int main() {
 
     if(inet_pton(AF_INET, BS_SERVER_IP, &bs_server_addr.sin_addr) <= 0) {
         perror("Неверный IP адрес");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Ошибка создания сокета");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     if (connect(bs_fd, (struct sockaddr *)&bs_server_addr, sizeof(bs_server_addr)) < 0) {
         perror("Ошибка подключения");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     connected = true;
