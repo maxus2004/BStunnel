@@ -62,7 +62,7 @@ void* serial_to_bs_loop(void* args){
 
     uint8_t buf[65535];
     while(true){
-        while(!connected | BS_CONN_LENGTH-sent_bytes){
+        while(!connected | sent_bytes == BS_CONN_LENGTH){
             sleep_ms(1);
         }
         int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
