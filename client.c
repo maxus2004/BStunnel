@@ -68,9 +68,10 @@ void* serial_to_bs_loop(void* args){
         if (len > 0) {
             sent_bytes += len;
             pthread_mutex_lock( &bs_mutex );
+            printf("sending %i bytes to socket %i\n",len,bs_fd);
             write(bs_fd, buf, len);
+            printf("sending %i bytes\n",len);
             pthread_mutex_unlock( &bs_mutex );
-            printf("sent %i bytes\n",len);
         }else{
             perror("ошибка одна и ошибся ты");
         }
