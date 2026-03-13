@@ -104,8 +104,8 @@ void* bs_to_serial_loop(void* args){
             pthread_mutex_lock( &bs_mutex );
             shutdown(bs_fd, SHUT_WR);
             close(bs_fd);
-            pthread_mutex_unlock( &bs_mutex );
             bs_reconnect();
+            pthread_mutex_unlock( &bs_mutex );
         }
     }
 
