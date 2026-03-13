@@ -1,6 +1,6 @@
 #define BS_SERVER_PORT 443
 
-#define BS_CONN_LENGTH 1000
+#define BS_CONN_LENGTH 10000
 
 
 #include <signal.h>
@@ -64,8 +64,8 @@ void* serial_to_bs_loop(void* args){
             sleep_ms(1);
         }
         int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
-        sent_bytes += len;
         if (len > 0) {
+            sent_bytes += len;
             write(bs_fd, buf, len);
         }else{
             perror("ошибка одна и ошибся ты");
