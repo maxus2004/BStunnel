@@ -46,6 +46,7 @@ void bs_reconnect(){
     while(!connected){
         if (connect(bs_fd, (struct sockaddr *)&bs_server_addr, sizeof(bs_server_addr)) < 0) {
             perror("Ошибка подключения");
+            close(bs_fd);
             continue;
         }
         connected = true;
