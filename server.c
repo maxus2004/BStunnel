@@ -28,6 +28,8 @@ int addrlen = sizeof(address);
 int sent_bytes = 0;
 bool connected = false;
 
+pthread_mutex_t bs_mutex;
+
 void sleep_ms(int ms){
     struct timespec req;
     req.tv_sec = 0;
@@ -65,9 +67,11 @@ void* serial_to_bs_loop(void* args){
         }
         int len = read(serial_fd, buf, MIN(BS_CONN_LENGTH-sent_bytes,sizeof(buf)));
         if (len > 0) {
-            printf("sent %i bytes\n",len);
             sent_bytes += len;
+            pthread_mutex_lock( &bs_mutex );
             write(bs_fd, buf, len);
+            pthread_mutex_unlock( &bs_mutex );
+            printf("sent %i bytes\n",len);
         }else{
             perror("ошибка одна и ошибся ты");
         }
@@ -97,7 +101,9 @@ void* bs_to_serial_loop(void* args){
             perror("aboba");
             printf("received EOF\n");
             connected = false;
+            pthread_mutex_lock( &bs_mutex );
             close(bs_fd);
+            pthread_mutex_unlock( &bs_mutex );
             bs_reconnect();
         }
     }
@@ -106,6 +112,8 @@ void* bs_to_serial_loop(void* args){
 }
 
 int main() {
+    pthread_mutex_init(&bs_mutex, NULL);
+
     //create serial port
     int serial_slave_fd;
     char serial_name[256];
