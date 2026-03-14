@@ -1,4 +1,4 @@
-#define BS_SERVER_IP "185.231.247.18"
+#define BS_SERVER_IP "127.0.0.1"
 #define BS_SERVER_PORT 443
 
 #define BS_CONN_LENGTH 10
@@ -123,6 +123,9 @@ int main() {
         exit(1);
     }
     printf("created serial port: %s\n", serial_name);
+
+    printf("sleeping for 5 seconds...\n");
+    sleep(5);
 
     //create BS
     memset(&bs_server_addr, '0', sizeof(bs_server_addr));
